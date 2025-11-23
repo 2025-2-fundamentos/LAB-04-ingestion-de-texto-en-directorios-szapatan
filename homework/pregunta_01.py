@@ -4,7 +4,9 @@
 """
 Escriba el codigo que ejecute la accion solicitada en cada pregunta.
 """
-
+import pandas as pd
+from homework import helpers
+import os
 
 def pregunta_01():
     """
@@ -71,3 +73,40 @@ def pregunta_01():
 
 
     """
+
+    train="files/input/input/train"
+    test="files/input/input/test"
+    train_file="files/output/train_dataset.csv"
+    test_file="files/output/test_dataset.csv"
+    if os.path.exists(train_file):
+        os.remove(train_file)
+    if os.path.exists(test_file):
+        os.remove(test_file)
+    df=[]
+    for folder in os.listdir(train):
+        filelist=helpers.filenames(train+"/"+folder)
+        for f in filelist:
+            line=helpers.read_file(f)
+            df.append([folder,line])
+    df=pd.DataFrame(df,columns=["target","phrase"])
+   
+    outfolder="files/output"
+    if not os.path.exists(outfolder):
+        os.mkdir(outfolder)
+        #print(outfolder)
+    
+    df.to_csv(train_file)
+    
+    df=[]
+    for folder in os.listdir(test):
+        filelist=helpers.filenames(test+"/"+folder)
+        for f in filelist:
+            line=helpers.read_file(f)
+            df.append([folder,line])
+    df=pd.DataFrame(df,columns=["target","phrase"])
+
+    
+    df.to_csv(test_file)
+
+
+
